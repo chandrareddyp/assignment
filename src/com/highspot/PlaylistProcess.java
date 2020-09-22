@@ -30,16 +30,16 @@ import org.json.simple.parser.JSONParser;
  */
 public class PlaylistProcess {
 
-  Map<String,List<Song>> songsByArtist = new HashMap<>();
-  Map<String,Song> songsByTitle = new HashMap<>();
-  Map<Integer,Song> songsById = new HashMap<>();
-  Map<Integer,Playlist> playlistByUserId = new HashMap<>();
-  Map<Integer,Playlist> playlistById = new HashMap<>();
-  Map<String,Integer> userByName = new HashMap<>();
-  Map<Integer,String> userByID = new HashMap<>();
-  int nextUserId = 1;
-  int nextSongId = 1;
-  int nextPlaylistId = 1;
+  private Map<String,List<Song>> songsByArtist = new HashMap<>();
+  private Map<String,Song> songsByTitle = new HashMap<>();
+  private Map<Integer,Song> songsById = new HashMap<>();
+  private Map<Integer,Playlist> playlistByUserId = new HashMap<>();
+  private Map<Integer,Playlist> playlistById = new HashMap<>();
+  private Map<String,Integer> userByName = new HashMap<>();
+  private Map<Integer,String> userByID = new HashMap<>();
+  private int nextUserId = 1;
+  private int nextSongId = 1;
+  private int nextPlaylistId = 1;
   public static void main(String[] args) {
     if(args.length!=3) {
       System.out.println("Please provide valid number of input parameters. input file, change file and output file path.");
