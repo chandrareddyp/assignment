@@ -301,18 +301,6 @@ public class PlaylistProcess {
     }
   }
 
-  private static String readInput() {
-    String name = null;
-
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));) {
-      name = reader.readLine();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    return name;
-  }
-
   class Playlist {
     int id;
     int userId;
