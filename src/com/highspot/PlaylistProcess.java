@@ -133,8 +133,10 @@ public class PlaylistProcess {
           int currUserID;
           if(userByName.containsKey(username)) {
             currUserID = userByName.get(username);
+            System.out.println("Existing Playlist with username:"+username+", will update with provided songs in changes file.");
           }else {
             currUserID = nextUserId;nextUserId++;
+            System.out.println("New Playlist with new username:"+username+", will update with provided songs in changes file.");
             userByName.put(username, currUserID);
             userByID.put(currUserID, username);
           }
@@ -177,6 +179,7 @@ public class PlaylistProcess {
           if(pl!=null) {
             playlistById.remove(pl.id);
             playlistByUserId.remove(pl.userId);
+            System.out.println("Playlist with the username:"+userByName.get(map.get("username"))+" is deleted.");
           }
         }//for loop
       }
