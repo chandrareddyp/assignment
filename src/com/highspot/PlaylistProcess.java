@@ -63,16 +63,16 @@ public class PlaylistProcess {
     try {
       Object obj = parser.parse(new FileReader(file));
       JSONObject jsonObject = (JSONObject) obj;
+
       JSONArray songs = (JSONArray) jsonObject.get("songs");
       processSongs(songs);
+
       JSONArray users = (JSONArray) jsonObject.get("users");
-      if (users != null) {
-        processUsers(users);
-      }
+      processUsers(users);
+
       JSONArray playlist = (JSONArray) jsonObject.get("playlists");
-      if (playlist != null) {
-        processPlaylist(playlist);
-      }
+      processPlaylist(playlist);
+
     } catch (Exception exe) {
       System.out.println(exe.getMessage());
     }
@@ -245,34 +245,38 @@ public class PlaylistProcess {
   }
 
   private void processPlaylist(JSONArray playlist) {
-    System.out.println("In input file total playlist: " + playlist.size());
-    for (Object list : playlist) {
-      Map<String, Object> map = (Map<String, Object>) list;
-      String id = (String) map.get("id");
-      String userId = (String) map.get("user_id");
-      Set<Integer> set = new HashSet<>();
-      for (String sid : (List<String>) map.get("song_ids")) {
-        Integer in = Integer.parseInt(sid);
-        set.add(in);
+    if (playlist != null) {
+      System.out.println("In input file total playlist: " + playlist.size());
+      for (Object list : playlist) {
+        Map<String, Object> map = (Map<String, Object>) list;
+        String id = (String) map.get("id");
+        String userId = (String) map.get("user_id");
+        Set<Integer> set = new HashSet<>();
+        for (String sid : (List<String>) map.get("song_ids")) {
+          Integer in = Integer.parseInt(sid);
+          set.add(in);
+        }
+        if (nextPlaylistId <= Integer.parseInt(id))
+          nextPlaylistId = Integer.parseInt(id) + 1;
+        Playlist pl = new Playlist(Integer.parseInt(id), Integer.parseInt(userId), set);
+        playlistByUserId.put(Integer.parseInt(userId), pl);
+        playlistById.put(Integer.parseInt(id), pl);
       }
-      if (nextPlaylistId <= Integer.parseInt(id))
-        nextPlaylistId = Integer.parseInt(id) + 1;
-      Playlist pl = new Playlist(Integer.parseInt(id), Integer.parseInt(userId), set);
-      playlistByUserId.put(Integer.parseInt(userId), pl);
-      playlistById.put(Integer.parseInt(id), pl);
     }
   }
 
   private void processUsers(JSONArray users) {
-    System.out.println("In input file total users: " + users.size());
-    for (Object user : users) {
-      Map<String, String> map = (Map<String, String>) user;
-      String id = map.get("id");
-      String name = map.get("name");
-      if (nextUserId <= Integer.parseInt(id))
-        nextUserId = Integer.parseInt(id) + 1;
-      userByID.put(Integer.parseInt(id), name);
-      userByName.put(name, Integer.parseInt(id));
+    if (users != null) {
+      System.out.println("In input file total users: " + users.size());
+      for (Object user : users) {
+        Map<String, String> map = (Map<String, String>) user;
+        String id = map.get("id");
+        String name = map.get("name");
+        if (nextUserId <= Integer.parseInt(id))
+          nextUserId = Integer.parseInt(id) + 1;
+        userByID.put(Integer.parseInt(id), name);
+        userByName.put(name, Integer.parseInt(id));
+      }
     }
   }
 
