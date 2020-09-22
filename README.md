@@ -10,7 +10,7 @@ Note:: the playlist.json and changes.json file formats should be proper as shown
 
 How to scale to handle large input files and/or very large changes files:
 Input files very large:
-If very large input file, then process chunk of input file instead of loading full file into memory, after processing chenk of the file store info as below:
+If very large input file, then process chunk of input file instead of loading full file into memory, after processing block of the file store info as below:
 1. Users data, store user's data sorted by user id, store data into n number of file, fix the file size and range of user id's data its stored. So when we are searching for user data by id then we can search using binary search, we should be able to search in O(log n). 
 Create kind of index on user name, means store user names in sorted order and its ids. if we want to search a user id by user name then we should be able to get in O(log n) time.
 2. Songs data, similar to user data, store songs data also in smaller files, sort by song id's (id, artist and title). Maintain each file metadata (which has plays id's range its storing, its kind of consistent hashing technique).
@@ -22,3 +22,8 @@ Overall songs data will be stored in 3 sets of files, first set of files stores 
 Create a index for userId, file stores userId and playlist id. Here also we may need to store info in multuple files and maintain range of userId's stored on each file.
 Playlist data stores in two sets of files, first set of files stores playlist data by playlist id, and second set of files stores by userId.
 In this way we can search playlist data by playlist id or userId in O(long n) time.
+
+Changes files very large:
+If the changes file is very large then we can process chunk/block of the file instead of full file, as we haev already stored the input file info properly and we do have indices created on different attributes, now we can search songs info (by artist or title) and users info (by user name) in O(log n) time, and we can also search playlist info for the give n user in O(log n) time, and we can update existing playlist or add new playlist to existing file which are created in the above input file process.
+
+We can also scale this program in n number of threads or microservices or lambda functions, but we need to use locking (optimistic/pessimistic) or synchronization to make sure no two threads are modifying the same file same time.
