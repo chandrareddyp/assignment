@@ -24,6 +24,6 @@ Playlist data stores in two sets of files, first set of files stores playlist da
 In this way we can search playlist data by playlist id or userId in O(long n) time.
 
 Changes files very large:
-If the changes file is very large then we can process chunk/block of the file instead of full file, as we haev already stored the input file info properly and we do have indices created on different attributes, now we can search songs info (by artist or title) and users info (by user name) in O(log n) time, and we can also search playlist info for the give n user in O(log n) time, and we can update existing playlist or add new playlist to existing file which are created in the above input file process.
+If the changes file is very large then we can process chunk/block of the file instead of full file, as we haev already stored the input file info properly and we do have indices created on different attributes, now we can search songs info (by artist or title) and users info (by user name) in O(log n) time, and we can also search playlist info for the give n user in O(log n) time, and we can update existing playlist or add new playlist to existing file (with O(log n) time) which are created in the above input file process.
 
 We can also scale this program in n number of threads or microservices or lambda functions, but we need to use locking (optimistic/pessimistic) or synchronization to make sure no two threads are modifying the same file same time.
