@@ -1,6 +1,7 @@
 # assignment
 problem statement: https://engage.highspot.com/viewer/5f5aa8a4a2e3a97e5174a416?iid=5e3ddf836a3b111a75317962&source=email.untracked
-This java program accepts three input parameters,
+
+This java program accepts three input parameters:-
 
 1.Playlist file in JSON format, which has list of users, playlist and songs. Each playlist is create for a user with set of songs. See the sample playlist.json file here - https://github.com/chandrareddyp/assignment/blob/master/properties/playlist.json
 2.changes.json file, which has "update_playlist" to update the existing play list in playlist.json, and "remove_playlist" which has user name for which playlist's need to remove from playlist.json file. Sample changes.json file - https://github.com/chandrareddyp/assignment/blob/master/properties/changes.json
