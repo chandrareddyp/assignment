@@ -81,16 +81,16 @@ public class PlaylistProcess {
   private void updateData(String file) {
     JSONParser parser = new JSONParser();
     try {
+
       Object obj = parser.parse(new FileReader(file));
       JSONObject jsonObject = (JSONObject) obj;
+
       JSONArray playlist = (JSONArray) jsonObject.get("update_playlist");
-      if (playlist != null) {
-        updatePlaylist(playlist);
-      }
+      updatePlaylist(playlist);
+
       JSONArray remove = (JSONArray) jsonObject.get("remove_playlist");
-      if (remove != null) {
-        deletePlaylist(remove);
-      }
+      deletePlaylist(remove);
+
     } catch (Exception exe) {
       new RuntimeException("Input data is not proper:" + exe.toString());
     }
@@ -175,69 +175,73 @@ public class PlaylistProcess {
 
   @SuppressWarnings("unchecked")
   private void deletePlaylist(JSONArray remove) {
-    for (Object list : remove) {
-      Map<String, Object> map = (Map<String, Object>) list;
-      Playlist pl = playlistByUserId.get(userByName.get(map.get("username")));
-      if (pl != null) {
-        playlistById.remove(pl.id);
-        playlistByUserId.remove(pl.userId);
-        System.out.println("Playlist with the username:" + userByName.get(map.get("username")) + " is deleted.");
+    if (remove != null) {
+      for (Object list : remove) {
+        Map<String, Object> map = (Map<String, Object>) list;
+        Playlist pl = playlistByUserId.get(userByName.get(map.get("username")));
+        if (pl != null) {
+          playlistById.remove(pl.id);
+          playlistByUserId.remove(pl.userId);
+          System.out.println("Playlist with the username:" + userByName.get(map.get("username")) + " is deleted.");
+        }
       }
     }
   }
 
   @SuppressWarnings("unchecked")
   private void updatePlaylist(JSONArray playlist) {
-    System.out.println("In changes file total playlist to update: " + playlist.size());
-    int i = 1;
-    for (Object list : playlist) {
-      Map<String, Object> map = (Map<String, Object>) list;
-      String username = (String) map.get("username");
-      int currUserID;
-      if (userByName.containsKey(username)) {
-        currUserID = userByName.get(username);
-        System.out.println(
-            "Existing Playlist with username:" + username + ", will update with provided songs in changes file.");
-      } else {
-        currUserID = nextUserId;
-        nextUserId++;
-        System.out.println(
-            "New Playlist with new username:" + username + ", will update with provided songs in changes file.");
-        userByName.put(username, currUserID);
-        userByID.put(currUserID, username);
-      }
+    if (playlist != null) {
+      System.out.println("In changes file total playlist to update: " + playlist.size());
+      int i = 1;
+      for (Object list : playlist) {
+        Map<String, Object> map = (Map<String, Object>) list;
+        String username = (String) map.get("username");
+        int currUserID;
+        if (userByName.containsKey(username)) {
+          currUserID = userByName.get(username);
+          System.out.println(
+              "Existing Playlist with username:" + username + ", will update with provided songs in changes file.");
+        } else {
+          currUserID = nextUserId;
+          nextUserId++;
+          System.out.println(
+              "New Playlist with new username:" + username + ", will update with provided songs in changes file.");
+          userByName.put(username, currUserID);
+          userByID.put(currUserID, username);
+        }
 
-      JSONArray songs = (JSONArray) map.get("songs");
-      if (songs != null) {
-        System.out.println("In changes file total songs to update for playlist " + (i++) + ": " + songs.size());
-        for (Object song : songs) {
-          Map<String, String> songMap = (Map<String, String>) song;
-          String artist = songMap.get("artist");
-          String title = songMap.get("title");
-          int songid;
-          if (songsByTitle.containsKey(title)) {
-            songid = songsByTitle.get(title).id;
-          } else {
-            songid = nextSongId;
-            nextSongId++;
-            Song s = new Song(songid, artist, title);
-            songsByTitle.put(title, s);
-            songsById.put(songid, s);
-          }
-          if (playlistByUserId.containsKey(currUserID)) {
-            playlistByUserId.get(currUserID).songs.add(songid);
-          } else {
-            int plid = nextPlaylistId;
-            nextPlaylistId++;
-            Set<Integer> set = new HashSet<>();
-            set.add(songid);
-            Playlist pl = new Playlist(plid, currUserID, set);
-            playlistByUserId.put(currUserID, pl);
-            playlistById.put(plid, pl);
-          }
-        } // for loop
-      }
-    } // for loop
+        JSONArray songs = (JSONArray) map.get("songs");
+        if (songs != null) {
+          System.out.println("In changes file total songs to update for playlist " + (i++) + ": " + songs.size());
+          for (Object song : songs) {
+            Map<String, String> songMap = (Map<String, String>) song;
+            String artist = songMap.get("artist");
+            String title = songMap.get("title");
+            int songid;
+            if (songsByTitle.containsKey(title)) {
+              songid = songsByTitle.get(title).id;
+            } else {
+              songid = nextSongId;
+              nextSongId++;
+              Song s = new Song(songid, artist, title);
+              songsByTitle.put(title, s);
+              songsById.put(songid, s);
+            }
+            if (playlistByUserId.containsKey(currUserID)) {
+              playlistByUserId.get(currUserID).songs.add(songid);
+            } else {
+              int plid = nextPlaylistId;
+              nextPlaylistId++;
+              Set<Integer> set = new HashSet<>();
+              set.add(songid);
+              Playlist pl = new Playlist(plid, currUserID, set);
+              playlistByUserId.put(currUserID, pl);
+              playlistById.put(plid, pl);
+            }
+          } // for loop
+        }
+      } // for loop
+    }
   }
 
   private void processPlaylist(JSONArray playlist) {
